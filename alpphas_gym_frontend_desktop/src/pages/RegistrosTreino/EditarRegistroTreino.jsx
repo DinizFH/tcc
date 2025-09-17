@@ -8,6 +8,7 @@ export default function EditarRegistroTreino() {
   const [exercicios, setExercicios] = useState([]);
   const [cargas, setCargas] = useState({});
   const [nomeTreino, setNomeTreino] = useState("");
+  const [nomePlano, setNomePlano] = useState("");
   const [observacoes, setObservacoes] = useState("");
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function EditarRegistroTreino() {
       try {
         const res = await api.get(`/registrostreino/${id}`);
         setNomeTreino(res.data.nome_treino);
+        setNomePlano(res.data.nome_plano || "");
         setObservacoes(res.data.observacoes || "");
 
         const cargasExistentes = {};
@@ -54,8 +56,9 @@ export default function EditarRegistroTreino() {
       };
 
       await api.put(`/registrostreino/${id}`, payload);
-      alert("Registro de treino atualizado com sucesso!");
-      navigate("/registrostreino");
+      navigate("/registrostreino", {
+        state: { mensagem: "Treino Editado com sucesso!" },
+      });
     } catch (err) {
       console.error("Erro ao atualizar registro:", err);
       alert("Erro ao atualizar registro.");
@@ -64,7 +67,10 @@ export default function EditarRegistroTreino() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Editar Registro: {nomeTreino}</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        Editar Registro:{" "}
+        {nomePlano ? `${nomePlano} — ${nomeTreino}` : nomeTreino}
+      </h1>
 
       <div className="mb-6">
         <label className="block mb-1 font-medium">Observações</label>
@@ -87,7 +93,9 @@ export default function EditarRegistroTreino() {
             >
               <div className="flex-1">
                 <p className="font-semibold">{ex.nome}</p>
-                <p className="text-sm text-gray-500">Grupo: {ex.grupo_muscular}</p>
+                <p className="text-sm text-gray-500">
+                  Grupo: {ex.grupo_muscular}
+                </p>
               </div>
               <input
                 type="number"

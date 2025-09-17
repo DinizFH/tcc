@@ -22,7 +22,10 @@ export default function CriarAgendamento({ isEditMode = false }) {
         const perfil = await api.get("/usuarios/perfil");
         setTipoUsuario(perfil.data.tipo_usuario);
 
-        if (perfil.data.tipo_usuario !== "personal" && perfil.data.tipo_usuario !== "nutricionista") {
+        if (
+          perfil.data.tipo_usuario !== "personal" &&
+          perfil.data.tipo_usuario !== "nutricionista"
+        ) {
           alert("Acesso negado.");
           navigate("/dashboard/" + perfil.data.tipo_usuario);
           return;
@@ -56,7 +59,7 @@ export default function CriarAgendamento({ isEditMode = false }) {
     }
 
     fetchDados();
-  }, [id, isEditMode]);
+  }, [id, isEditMode, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,10 +78,8 @@ export default function CriarAgendamento({ isEditMode = false }) {
           ...payload,
           status: "marcado", // ✅ garante persistência
         });
-        alert("Agendamento atualizado com sucesso!");
       } else {
         await api.post("/agendamentos/", payload);
-        alert("Agendamento criado com sucesso!");
       }
       navigate("/agendamentos");
     } catch (err) {
@@ -123,7 +124,9 @@ export default function CriarAgendamento({ isEditMode = false }) {
             <select
               name="tipo_agendamento"
               value={form.tipo_agendamento}
-              onChange={(e) => setForm({ ...form, tipo_agendamento: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, tipo_agendamento: e.target.value })
+              }
               className="w-full p-2 border border-gray-300 rounded"
               required
             >
@@ -144,24 +147,32 @@ export default function CriarAgendamento({ isEditMode = false }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold">Data e Hora de Início</label>
+            <label className="block text-sm font-semibold">
+              Data e Hora de Início
+            </label>
             <input
               type="datetime-local"
               name="data_hora_inicio"
               value={form.data_hora_inicio}
-              onChange={(e) => setForm({ ...form, data_hora_inicio: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, data_hora_inicio: e.target.value })
+              }
               className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold">Data e Hora de Término</label>
+            <label className="block text-sm font-semibold">
+              Data e Hora de Término
+            </label>
             <input
               type="datetime-local"
               name="data_hora_fim"
               value={form.data_hora_fim}
-              onChange={(e) => setForm({ ...form, data_hora_fim: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, data_hora_fim: e.target.value })
+              }
               className="w-full p-2 border border-gray-300 rounded"
               required
             />

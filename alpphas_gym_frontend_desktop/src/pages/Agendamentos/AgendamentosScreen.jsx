@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalCancelarAgendamento from "../../components/ModalCancelarAgendamento";
+import ModalConcluirAgendamento from "../../components/ModalConcluirAgendamento";
 
 export default function AgendamentosScreen() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [tipoUsuario, setTipoUsuario] = useState("");
+  const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
+  const [mostrarModalConcluir, setMostrarModalConcluir] = useState(false);
+  const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,30 +29,48 @@ export default function AgendamentosScreen() {
     fetchDados();
   }, []);
 
-  const cancelarAgendamento = async (id_agendamento) => {
-    if (!window.confirm("Deseja cancelar este agendamento?")) return;
+  // === CANCELAR ===
+  const abrirModalCancelar = (agendamento) => {
+    setAgendamentoSelecionado(agendamento);
+    setMostrarModalCancelar(true);
+  };
+
+  const confirmarCancelamento = async () => {
     try {
-      await api.delete(`/agendamentos/${id_agendamento}`);
+      await api.delete(`/agendamentos/${agendamentoSelecionado.id_agendamento}`);
       setAgendamentos((prev) =>
         prev.map((a) =>
-          a.id_agendamento === id_agendamento ? { ...a, status: "cancelado" } : a
+          a.id_agendamento === agendamentoSelecionado.id_agendamento
+            ? { ...a, status: "cancelado" }
+            : a
         )
       );
+      setMostrarModalCancelar(false);
     } catch (err) {
       console.error("Erro ao cancelar:", err);
       alert("Erro ao cancelar agendamento.");
     }
   };
 
-  const concluirAgendamento = async (id_agendamento) => {
-    if (!window.confirm("Marcar este agendamento como CONCLUÍDO?")) return;
+  // === CONCLUIR ===
+  const abrirModalConcluir = (agendamento) => {
+    setAgendamentoSelecionado(agendamento);
+    setMostrarModalConcluir(true);
+  };
+
+  const confirmarConclusao = async () => {
     try {
-      await api.put(`/agendamentos/${id_agendamento}`, { status: "concluído" });
+      await api.put(`/agendamentos/${agendamentoSelecionado.id_agendamento}`, {
+        status: "concluído",
+      });
       setAgendamentos((prev) =>
         prev.map((a) =>
-          a.id_agendamento === id_agendamento ? { ...a, status: "concluído" } : a
+          a.id_agendamento === agendamentoSelecionado.id_agendamento
+            ? { ...a, status: "concluído" }
+            : a
         )
       );
+      setMostrarModalConcluir(false);
     } catch (err) {
       console.error("Erro ao concluir:", err);
       alert("Erro ao concluir agendamento.");
@@ -90,7 +113,9 @@ export default function AgendamentosScreen() {
                   <div>
                     <p className="font-semibold">
                       {tipoUsuario === "aluno"
-                        ? `Profissional: ${agendamento.nome_profissional || "Indefinido"}`
+                        ? `Profissional: ${
+                            agendamento.nome_profissional || "Indefinido"
+                          }`
                         : `Aluno: ${agendamento.nome_aluno || "Indefinido"}`}
                     </p>
                     <p className="text-sm text-gray-600">
@@ -120,14 +145,16 @@ export default function AgendamentosScreen() {
                         <>
                           <button
                             onClick={() =>
-                              navigate(`/agendamentos/${agendamento.id_agendamento}/editar`)
+                              navigate(
+                                `/agendamentos/${agendamento.id_agendamento}/editar`
+                              )
                             }
                             className="px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-sm font-medium"
                           >
                             Editar
                           </button>
                           <button
-                            onClick={() => concluirAgendamento(agendamento.id_agendamento)}
+                            onClick={() => abrirModalConcluir(agendamento)}
                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm font-medium"
                           >
                             Concluir
@@ -137,7 +164,7 @@ export default function AgendamentosScreen() {
 
                     {(status === "marcado" || status === "remarcado") && (
                       <button
-                        onClick={() => cancelarAgendamento(agendamento.id_agendamento)}
+                        onClick={() => abrirModalCancelar(agendamento)}
                         className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-medium"
                       >
                         Cancelar
@@ -150,6 +177,20 @@ export default function AgendamentosScreen() {
           </div>
         )}
       </div>
+
+      {mostrarModalCancelar && (
+        <ModalCancelarAgendamento
+          onClose={() => setMostrarModalCancelar(false)}
+          onConfirm={confirmarCancelamento}
+        />
+      )}
+
+      {mostrarModalConcluir && (
+        <ModalConcluirAgendamento
+          onClose={() => setMostrarModalConcluir(false)}
+          onConfirm={confirmarConclusao}
+        />
+      )}
     </Layout>
   );
 }

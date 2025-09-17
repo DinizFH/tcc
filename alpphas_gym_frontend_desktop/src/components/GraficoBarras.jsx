@@ -3,19 +3,17 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
   ResponsiveContainer,
   Legend,
+  LabelList,
 } from "recharts";
 
 export default function GraficoBarras({ avaliacoes, campo }) {
-  // Constrói os dados para o gráfico
-  const data = avaliacoes.map((a, index) => ({
+  const data = avaliacoes.map((a) => ({
     nome: new Date(a.data_avaliacao).toLocaleDateString("pt-BR"),
-    valor: parseFloat(a[campo]) || 0,     // garante que sempre terá número
+    valor: parseFloat(a[campo]) || 0,
   }));
 
-  // Verifica se todos os valores são 0 ou inválidos
   const temDadosValidos = data.some((d) => d.valor > 0);
 
   if (!temDadosValidos) {
@@ -38,9 +36,17 @@ export default function GraficoBarras({ avaliacoes, campo }) {
         <BarChart data={data}>
           <XAxis dataKey="nome" />
           <YAxis />
-          <Tooltip />
           <Legend />
-          <Bar dataKey="valor" fill="#3b82f6" />
+          <Bar dataKey="valor" fill="#3b82f6">
+            {/* 🔹 Força exibir o valor acima da barra */}
+            <LabelList
+              dataKey="valor"
+              position="top"
+              fill="#111"
+              fontSize={12}
+              formatter={(value) => value.toFixed(2)}
+            />
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

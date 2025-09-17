@@ -1,6 +1,7 @@
+// src/components/PrivateRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from "../axios"; // Usa axios configurado
 
 export default function PrivateRoute({ children }) {
   const [autenticado, setAutenticado] = useState(null);
@@ -15,9 +16,7 @@ export default function PrivateRoute({ children }) {
       }
 
       try {
-        const res = await axios.get("http://localhost:5000/usuarios/perfil", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get("/usuarios/perfil"); // Usa API com baseURL dinâmica
 
         const { nome, tipo_usuario, foto_perfil, email } = res.data;
 

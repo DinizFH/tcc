@@ -13,7 +13,11 @@ export default function CriarExercicio() {
   const tipoUsuario = localStorage.getItem("perfil_tipo");
 
   if (tipoUsuario !== "personal") {
-    return <Layout><p className="p-6 text-red-600">Acesso não autorizado.</p></Layout>;
+    return (
+      <Layout>
+        <p className="p-6 text-red-600">Acesso não autorizado.</p>
+      </Layout>
+    );
   }
 
   const handleSubmit = async (e) => {
@@ -29,10 +33,10 @@ export default function CriarExercicio() {
         nome,
         grupo_muscular: grupoMuscular,
         observacoes,
-        video
+        video,
       });
 
-      alert("Exercício criado com sucesso!");
+      // 🔹 sem alert — redireciona direto
       navigate("/exercicios");
     } catch (error) {
       console.error("Erro ao criar exercício:", error);

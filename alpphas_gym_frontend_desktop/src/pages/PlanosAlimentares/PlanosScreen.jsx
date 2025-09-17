@@ -2,17 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
-import ModalSelecionarAluno from "./ModalSelecionarAluno";
-import ModalConfirmarExclusao from "./ModalConfirmarExclusao";
-import ModalEnviarPlano from "./ModalEnviarPlano";
+import ModalConfirmarExclusao from "../../components/ModalConfirmarExclusao";
 
 export default function PlanosScreen() {
   const [planos, setPlanos] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [tipo, setTipo] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalExclusao, setMostrarModalExclusao] = useState(false);
-  const [mostrarModalEnviar, setMostrarModalEnviar] = useState(false);
   const [planoSelecionado, setPlanoSelecionado] = useState(null);
   const navigate = useNavigate();
 
@@ -22,7 +18,7 @@ export default function PlanosScreen() {
       setTipo(perfil.data.tipo_usuario);
 
       const resposta = await api.get("/planos/");
-      setPlanos(resposta.data);
+      setPlanos(resposta.data || []);
     } catch (err) {
       console.error("Erro ao carregar planos:", err);
     }
@@ -33,7 +29,7 @@ export default function PlanosScreen() {
   }, []);
 
   const handleCriarPlano = () => {
-    setMostrarModal(true);
+    navigate("/planos/criar");
   };
 
   const handleVerDetalhes = (id) => {
@@ -52,32 +48,13 @@ export default function PlanosScreen() {
   const handleExcluir = async () => {
     try {
       await api.delete(`/planos/${planoSelecionado.id_plano}`);
-      setPlanos(planos.filter((p) => p.id_plano !== planoSelecionado.id_plano));
+      setPlanos((prev) =>
+        prev.filter((p) => p.id_plano !== planoSelecionado.id_plano)
+      );
       setMostrarModalExclusao(false);
     } catch (err) {
       console.error("Erro ao excluir plano:", err);
       alert("Erro ao excluir plano.");
-    }
-  };
-
-  const abrirModalEnviar = (plano) => {
-    setPlanoSelecionado(plano);
-    setMostrarModalEnviar(true);
-  };
-
-  const handleExportarPDF = async (id) => {
-    try {
-      const response = await api.get(`/planos/${id}/pdf`, {
-        responseType: "blob",
-      });
-
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = `plano_alimentar_${id}.pdf`;
-      link.click();
-    } catch (err) {
-      alert("Erro ao gerar PDF.");
     }
   };
 
@@ -88,13 +65,14 @@ export default function PlanosScreen() {
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
   };
 
+  // Filtro apenas por nome do aluno
   const planosFiltrados = planos.filter((plano) => {
-    const termo = filtro.toLowerCase();
-    return plano.nome_aluno?.toLowerCase().includes(termo);
+    const termo = (filtro || "").toLowerCase();
+    return (plano.nome_aluno ?? "").toString().toLowerCase().includes(termo);
   });
 
   return (
@@ -136,38 +114,25 @@ export default function PlanosScreen() {
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     <button
-                      className="text-blue-600 underline"
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
                       onClick={() => handleVerDetalhes(plano.id_plano)}
                     >
-                      Ver Detalhes
-                    </button>
-
-                    <button
-                      className="text-purple-600 underline"
-                      onClick={() => handleExportarPDF(plano.id_plano)}
-                    >
-                      Exportar
+                      Detalhes
                     </button>
 
                     {tipo === "nutricionista" && (
                       <>
                         <button
-                          className="text-yellow-600 underline"
+                          className="px-3 py-1 bg-purple-500 text-white rounded hover:bg-yellow-600 text-sm"
                           onClick={() => handleEditar(plano.id_plano)}
                         >
                           Editar
                         </button>
                         <button
-                          className="text-red-600 underline"
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
                           onClick={() => confirmarExclusao(plano)}
                         >
                           Excluir
-                        </button>
-                        <button
-                          className="text-green-600 underline"
-                          onClick={() => abrirModalEnviar(plano)}
-                        >
-                          Enviar
                         </button>
                       </>
                     )}
@@ -179,25 +144,11 @@ export default function PlanosScreen() {
         </div>
       </div>
 
-      {mostrarModal && (
-        <ModalSelecionarAluno
-          onClose={() => setMostrarModal(false)}
-          onPlanoCriado={carregarPlanos}
-        />
-      )}
-
       {mostrarModalExclusao && planoSelecionado && (
         <ModalConfirmarExclusao
-          nomePlano={`Plano de ${planoSelecionado.nome_aluno}`}
+          nomePlano={`Plano #${planoSelecionado.id_plano} — ${planoSelecionado.nome_aluno}`}
           onClose={() => setMostrarModalExclusao(false)}
           onConfirm={handleExcluir}
-        />
-      )}
-
-      {mostrarModalEnviar && planoSelecionado && (
-        <ModalEnviarPlano
-          idPlano={planoSelecionado.id_plano}
-          onClose={() => setMostrarModalEnviar(false)}
         />
       )}
     </Layout>

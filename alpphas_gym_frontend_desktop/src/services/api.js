@@ -1,14 +1,11 @@
-// src/axios.js
 import axios from "axios";
 
+// Base da URL do seu backend — ajuste conforme necessário
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "https://alpphas-gym-backend.onrender.com",
 });
 
-// Adiciona token JWT automaticamente, se existir
+// Interceptor opcional: inclui o token JWT em todas as requisições
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -18,5 +15,3 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
-
-console.log("API URL:", import.meta.env.VITE_API_URL);

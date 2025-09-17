@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalConfirmarExclusao from "../../components/ModalConfirmarExclusao";
 
 export default function DetalhesExercicio() {
   const { id } = useParams();
@@ -9,6 +10,9 @@ export default function DetalhesExercicio() {
   const tipoUsuario = localStorage.getItem("perfil_tipo");
 
   const [exercicio, setExercicio] = useState(null);
+
+  // controle do modal
+  const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
 
   useEffect(() => {
     buscarExercicio();
@@ -24,11 +28,10 @@ export default function DetalhesExercicio() {
     }
   };
 
-  const excluirExercicio = async () => {
-    if (!window.confirm("Deseja realmente excluir este exercício?")) return;
+  const confirmarExclusao = async () => {
     try {
       await api.delete(`/exercicios/${id}`);
-      alert("Exercício excluído com sucesso!");
+      setMostrarModalExcluir(false);
       navigate("/exercicios");
     } catch (error) {
       console.error("Erro ao excluir exercício:", error);
@@ -72,7 +75,7 @@ export default function DetalhesExercicio() {
               Editar
             </Link>
             <button
-              onClick={excluirExercicio}
+              onClick={() => setMostrarModalExcluir(true)}
               className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
             >
               Excluir
@@ -80,6 +83,15 @@ export default function DetalhesExercicio() {
           </div>
         )}
       </div>
+
+      {mostrarModalExcluir && (
+        <ModalConfirmarExclusao
+          titulo="Excluir Exercício"
+          mensagem={`Tem certeza que deseja excluir o exercício "${exercicio.nome}"? Essa ação não poderá ser desfeita.`}
+          onClose={() => setMostrarModalExcluir(false)}
+          onConfirm={confirmarExclusao}
+        />
+      )}
     </Layout>
   );
 }

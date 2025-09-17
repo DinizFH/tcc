@@ -1,6 +1,7 @@
+// src/components/Layout.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../axios"; // Importa axios configurado
 import Sidebar from "./Sidebar";
 
 export default function Layout({ children }) {
@@ -18,11 +19,7 @@ export default function Layout({ children }) {
       }
 
       try {
-        const res = await axios.get("http://localhost:5000/usuarios/perfil", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await api.get("/usuarios/perfil");
 
         setUsuario(res.data);
         setPerfilCompleto(res.data.perfil_completo);

@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalCancelarAgendamento from "../../components/ModalCancelarAgendamento";
 
 export default function DetalhesAgendamento() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [agendamento, setAgendamento] = useState(null);
   const [tipoUsuario, setTipoUsuario] = useState("");
+  const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -19,22 +21,26 @@ export default function DetalhesAgendamento() {
         setAgendamento(res.data);
       } catch (err) {
         console.error("Erro ao carregar agendamento:", err);
-        alert("Erro ao carregar detalhes do agendamento.");
+        navigate("/agendamentos", {
+          state: { mensagem: "Erro ao carregar detalhes do agendamento." },
+        });
       }
     }
 
     fetchData();
-  }, [id]);
+  }, [id, navigate]);
 
-  const cancelar = async () => {
-    if (!window.confirm("Deseja realmente cancelar este agendamento?")) return;
+  const confirmarCancelamento = async () => {
     try {
       await api.delete(`/agendamentos/${id}`);
-      alert("Agendamento cancelado com sucesso!");
-      navigate("/agendamentos");
+      navigate("/agendamentos", {
+        state: { mensagem: "Agendamento cancelado com sucesso!" },
+      });
     } catch (err) {
       console.error("Erro ao cancelar:", err);
-      alert("Erro ao cancelar agendamento.");
+      navigate("/agendamentos", {
+        state: { mensagem: "Erro ao cancelar agendamento." },
+      });
     }
   };
 
@@ -97,7 +103,7 @@ export default function DetalhesAgendamento() {
             )}
 
             <button
-              onClick={cancelar}
+              onClick={() => setMostrarModalCancelar(true)}
               className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
             >
               Cancelar
@@ -105,6 +111,13 @@ export default function DetalhesAgendamento() {
           </div>
         )}
       </div>
+
+      {mostrarModalCancelar && (
+        <ModalCancelarAgendamento
+          onClose={() => setMostrarModalCancelar(false)}
+          onConfirm={confirmarCancelamento}
+        />
+      )}
     </Layout>
   );
 }

@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiLogOut, FiUser, FiSettings } from "react-icons/fi";
+import { FiLogOut, FiUser } from "react-icons/fi";
 import logo from "../assets/alpphas_logo.png";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -28,15 +30,15 @@ export default function Sidebar() {
         { to: "/admin/usuarios", label: "Usuários" },
         { to: "/admin/estatisticas", label: "Estatísticas" },
         { to: "/admin/backups", label: "Back-ups" },
+        { to: "/admin/logs", label: "Logs de Envio" },
         { to: "/admin/config", label: "Configurações" },
-
       ];
     }
 
     if (tipo === "aluno") {
       return [
         ...base,
-        { to: "/treinos-aluno", label: "Treinos" },
+        { to: "/treinos", label: "Treinos" },
         { to: "/registrostreino", label: "Registros de Treino" },
         { to: "/planos", label: "Plano Alimentar" },
         { to: "/agendamentos-aluno", label: "Meus Agendamentos" },
@@ -72,17 +74,16 @@ export default function Sidebar() {
   const links = getLinks();
 
   return (
-    <div className="h-screen w-64 bg-white shadow-lg flex flex-col justify-between fixed">
-      <div className="flex flex-col items-center px-4 pt-6">
+    <div className="h-screen w-64 bg-white shadow-lg flex flex-col fixed no-print">
+      {/* Área rolável para conteúdo */}
+      <div className="flex-1 overflow-y-auto flex flex-col items-center px-4 pt-6">
+        {/* Logo */}
         <img src={logo} alt="Logo" className="w-32 mb-8" />
 
+        {/* Foto de Perfil */}
         <div className="flex flex-col items-center mb-6">
           <img
-            src={
-              foto
-                ? `http://localhost:5000/static/uploads/${foto}`
-                : "/icons/avatar.png"
-            }
+            src={foto ? `${API_URL}/static/uploads/${foto}` : "/icons/avatar.png"}
             alt="Perfil"
             className="w-20 h-20 rounded-full object-cover border"
           />
@@ -100,6 +101,7 @@ export default function Sidebar() {
           )}
         </div>
 
+        {/* Links */}
         {perfilCompleto && (
           <nav className="w-full flex flex-col gap-4 text-sm font-medium text-center">
             {links.map((link, index) => (
@@ -111,12 +113,14 @@ export default function Sidebar() {
         )}
       </div>
 
-      <div className="px-4 pb-6">
+      {/* Botão de Sair fixo */}
+      <div className="px-4 py-4 border-t bg-white">
         <button
           onClick={handleLogout}
-          className="w-full text-red-500 hover:text-red-700 text-sm flex items-center justify-center gap-2"
+          className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded transition-all"
         >
-          <FiLogOut /> Sair
+          <FiLogOut size={18} />
+          Sair
         </button>
       </div>
     </div>

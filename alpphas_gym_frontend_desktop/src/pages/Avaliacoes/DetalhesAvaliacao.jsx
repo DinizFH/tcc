@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalConfirmarExclusao from "../../components/ModalConfirmarExclusao";
+import { FiPrinter } from "react-icons/fi";
 import {
   PieChart,
   Pie,
@@ -15,6 +17,8 @@ export default function DetalhesAvaliacao() {
   const navigate = useNavigate();
   const [avaliacao, setAvaliacao] = useState(null);
   const [usuario, setUsuario] = useState(null);
+  const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
+  const [avaliacaoSelecionada, setAvaliacaoSelecionada] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -31,19 +35,28 @@ export default function DetalhesAvaliacao() {
     fetchData();
   }, [id]);
 
-  const handleExcluir = async () => {
-    if (window.confirm("Tem certeza que deseja excluir esta avaliação?")) {
-      try {
-        await api.delete(`/avaliacoes/${id}`);
-        navigate("/avaliacoes");
-      } catch (err) {
-        console.error("Erro ao excluir avaliação", err);
-      }
+  const abrirModalExcluir = () => {
+    setAvaliacaoSelecionada(avaliacao);
+    setMostrarModalExcluir(true);
+  };
+
+  const confirmarExclusao = async () => {
+    try {
+      await api.delete(`/avaliacoes/${avaliacaoSelecionada.id_avaliacao}`);
+      setMostrarModalExcluir(false);
+      navigate("/avaliacoes");
+    } catch (err) {
+      console.error("Erro ao excluir avaliação", err);
+      alert("Erro ao excluir avaliação.");
     }
   };
 
   const handleEditar = () => {
     navigate(`/avaliacoes/${id}/editar`);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   if (!avaliacao || !usuario) return <div>Carregando...</div>;
@@ -61,8 +74,19 @@ export default function DetalhesAvaliacao() {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto bg-white p-8 shadow-md rounded mt-6">
-        <h2 className="text-2xl font-bold mb-6">Detalhes da Avaliação</h2>
+      {/* Adicionei a classe print-area aqui */}
+      <div className="print-area max-w-4xl mx-auto bg-white p-8 shadow-md rounded mt-6">
+        {/* Cabeçalho com botão imprimir */}
+        <div className="flex justify-between items-center mb-6 no-print">
+          <h2 className="text-2xl font-bold">Detalhes da Avaliação</h2>
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            <FiPrinter size={18} />
+            Imprimir
+          </button>
+        </div>
 
         <p><strong>Aluno Avaliado:</strong> {avaliacao.nome_aluno}</p>
         <p><strong>CPF do Aluno:</strong> {avaliacao.cpf_aluno}</p>
@@ -73,7 +97,6 @@ export default function DetalhesAvaliacao() {
           <p><strong>Peso:</strong> {avaliacao.peso} kg</p>
           <p><strong>Altura:</strong> {avaliacao.altura} m</p>
           <p><strong>Idade:</strong> {avaliacao.idade} anos</p>
-
           <p><strong>IMC:</strong> {avaliacao.imc}</p>
           <p><strong>% Gordura:</strong> {avaliacao.percentual_gordura} %</p>
           <p><strong>Massa Magra:</strong> {avaliacao.massa_magra} kg</p>
@@ -106,7 +129,9 @@ export default function DetalhesAvaliacao() {
 
         <div className="mt-6">
           <p><strong>Observações:</strong></p>
-          <p className="bg-gray-100 p-4 rounded">{avaliacao.observacoes || "Nenhuma observação registrada."}</p>
+          <p className="bg-gray-100 p-4 rounded">
+            {avaliacao.observacoes || "Nenhuma observação registrada."}
+          </p>
         </div>
 
         {/* Gráfico de Composição Corporal */}
@@ -132,23 +157,34 @@ export default function DetalhesAvaliacao() {
           </div>
         </div>
 
-        {podeEditarOuExcluir && (
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={handleEditar}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-            >
-              Editar
-            </button>
-            <button
-              onClick={handleExcluir}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-            >
-              Excluir
-            </button>
-          </div>
-        )}
+        <div className="mt-6 flex gap-4 no-print">
+          {podeEditarOuExcluir && (
+            <>
+              <button
+                onClick={handleEditar}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                Editar
+              </button>
+              <button
+                onClick={abrirModalExcluir}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+              >
+                Excluir
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {mostrarModalExcluir && avaliacaoSelecionada && (
+        <ModalConfirmarExclusao
+          titulo="Excluir Avaliação"
+          mensagem={`Tem certeza que deseja excluir a avaliação de ${avaliacaoSelecionada.nome_aluno}? Essa ação não poderá ser desfeita.`}
+          onClose={() => setMostrarModalExcluir(false)}
+          onConfirm={confirmarExclusao}
+        />
+      )}
     </Layout>
   );
 }

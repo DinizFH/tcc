@@ -47,7 +47,7 @@ export default function EditarExercicio() {
         video,
       });
 
-      alert("Exercício atualizado com sucesso!");
+      // ✅ Apenas redireciona após salvar
       navigate("/exercicios");
     } catch (error) {
       console.error("Erro ao atualizar exercício:", error);

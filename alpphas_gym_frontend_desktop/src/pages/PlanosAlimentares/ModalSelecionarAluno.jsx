@@ -1,78 +1,120 @@
 import { useEffect, useState } from "react";
 import api from "../../axios";
-import CriarPlano from "./CriarPlano";
+import ModalCadastroRapidoAluno from "../../components/ModalCadastroRapidoAluno";
 
-export default function ModalSelecionarAluno({ onClose, onPlanoCriado }) {
+export default function SelecionarAlunoModal({ onSelect, onCancel }) {
   const [alunos, setAlunos] = useState([]);
   const [busca, setBusca] = useState("");
-  const [alunoSelecionado, setAlunoSelecionado] = useState(null);
+  const [mostrarCadastroRapido, setMostrarCadastroRapido] = useState(false);
 
   useEffect(() => {
-    async function carregarAlunos() {
-      try {
-        const res = await api.get("/usuarios/alunos");
-        setAlunos(res.data);
-      } catch (err) {
-        console.error("Erro ao carregar alunos:", err);
-      }
+    if (busca.length < 2) {
+      setAlunos([]);
+      return;
     }
-    carregarAlunos();
-  }, []);
 
-  const alunosFiltrados = alunos.filter((aluno) =>
-    aluno.nome.toLowerCase().includes(busca.toLowerCase())
-  );
+    const timer = setTimeout(() => {
+      api
+        .get(`/usuarios/alunos?nome=${busca}`)
+        .then((res) => setAlunos(res.data))
+        .catch((err) => {
+          console.error("Erro ao buscar alunos:", err);
+          setAlunos([]);
+        });
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [busca]);
+
+  const handleCancelar = () => {
+    if (typeof onCancel === "function") onCancel();
+  };
+
+  const handleSelecionar = (aluno) => {
+    if (typeof onSelect === "function") onSelect(aluno);
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        {!alunoSelecionado ? (
-          <>
-            <h2 className="text-xl font-bold mb-4">Selecionar Aluno</h2>
-            <input
-              type="text"
-              placeholder="Buscar aluno por nome"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="w-full p-2 border rounded mb-4"
-            />
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-xl shadow-xl relative">
+        {/* Cabeçalho */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Selecionar Aluno</h2>
+          <button
+            onClick={handleCancelar}
+            className="text-gray-500 hover:text-black"
+          >
+            ✖
+          </button>
+        </div>
 
-            <ul className="space-y-2">
-              {alunosFiltrados.map((aluno) => (
-                <li
-                  key={aluno.id_usuario}
-                  className="flex justify-between items-center border p-2 rounded hover:bg-gray-100"
-                >
-                  <div>
-                    <p className="font-semibold">{aluno.nome}</p>
-                    <p className="text-sm text-gray-600">CPF: {aluno.cpf}</p>
-                  </div>
-                  <button
-                    onClick={() => setAlunoSelecionado(aluno)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded"
-                  >
-                    Iniciar Plano
-                  </button>
-                </li>
-              ))}
-            </ul>
+        {/* Campo de busca */}
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Digite ao menos 2 letras do nome..."
+          className="w-full p-2 border rounded mb-4"
+        />
 
-            <div className="mt-6 text-right">
-              <button
-                onClick={onClose}
-                className="text-gray-600 hover:text-black"
+        {/* Lista de resultados */}
+        <div className="space-y-3 max-h-64 overflow-y-auto">
+          {busca.length >= 2 &&
+            alunos.map((aluno) => (
+              <div
+                key={aluno.id_usuario}
+                className="flex justify-between items-center p-3 border rounded bg-gray-50 hover:bg-gray-100"
               >
-                Cancelar
-              </button>
+                <div>
+                  <p className="font-medium">{aluno.nome}</p>
+                  <p className="text-sm text-gray-500">
+                    CPF: {aluno.cpf || "Não informado"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleSelecionar(aluno)}
+                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
+                >
+                  Iniciar Plano
+                </button>
+              </div>
+            ))}
+
+          {busca.length >= 2 && alunos.length === 0 && (
+            <div className="text-center text-gray-600 text-sm">
+              Nenhum aluno encontrado.
             </div>
-          </>
-        ) : (
-          <CriarPlano
-            aluno={alunoSelecionado}
-            onCancel={() => setAlunoSelecionado(null)}
-            onClose={() => {
-              if (onPlanoCriado) onPlanoCriado();
-              onClose();
+          )}
+        </div>
+
+        {/* Cadastrar novo aluno */}
+        {busca.length >= 2 && alunos.length === 0 && (
+          <button
+            onClick={() => setMostrarCadastroRapido(true)}
+            className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full"
+          >
+            + Cadastrar novo aluno
+          </button>
+        )}
+
+        {/* Rodapé */}
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleCancelar}
+            className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
+
+        {/* Modal de cadastro rápido */}
+        {mostrarCadastroRapido && (
+          <ModalCadastroRapidoAluno
+            onClose={() => setMostrarCadastroRapido(false)}
+            onAlunoCriado={(novoAluno) => {
+              setAlunos((prev) => [novoAluno, ...prev]);
+              setMostrarCadastroRapido(false);
+              handleSelecionar(novoAluno);
             }}
           />
         )}

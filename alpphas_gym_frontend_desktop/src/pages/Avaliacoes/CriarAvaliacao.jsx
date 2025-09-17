@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalCadastroRapidoAluno from "../../components/ModalCadastroRapidoAluno";
 
 export default function CriarAvaliacao() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const alunoNavegado = location.state?.alunoSelecionado || null;
+
   const [formData, setFormData] = useState({});
   const [erro, setErro] = useState("");
   const [buscaAluno, setBuscaAluno] = useState("");
   const [resultados, setResultados] = useState([]);
-  const [alunoSelecionado, setAlunoSelecionado] = useState(null);
+  const [alunoSelecionado, setAlunoSelecionado] = useState(alunoNavegado);
+  const [mostrarModalCadastro, setMostrarModalCadastro] = useState(false);
 
   const camposEsperados = [
     "altura", "peso", "idade",
@@ -22,24 +27,35 @@ export default function CriarAvaliacao() {
   ];
 
   useEffect(() => {
-    // Inicializa campos
     const initData = {};
     camposEsperados.forEach((c) => (initData[c] = ""));
     setFormData(initData);
   }, []);
 
   useEffect(() => {
-    if (buscaAluno.length >= 2) {
+    let ativo = true;
+    const termo = buscaAluno.trim();
+
+    if (termo.length >= 2) {
       const buscar = setTimeout(async () => {
         try {
-          const res = await api.get(`/avaliacoes/buscar-aluno?nome=${buscaAluno}`);
-          setResultados(res.data);
+          const res = await api.get(`/avaliacoes/buscar-aluno?nome=${termo}`);
+          if (ativo) setResultados(res.data);
         } catch (err) {
           console.error("Erro ao buscar aluno", err);
         }
       }, 400);
-      return () => clearTimeout(buscar);
+      return () => {
+        ativo = false;
+        clearTimeout(buscar);
+      };
+    } else {
+      setResultados([]);
     }
+
+    return () => {
+      ativo = false;
+    };
   }, [buscaAluno]);
 
   const handleChange = (e) => {
@@ -125,7 +141,8 @@ export default function CriarAvaliacao() {
               onChange={(e) => setBuscaAluno(e.target.value)}
               placeholder="Ex: João Silva"
             />
-            {resultados.length > 0 && (
+
+            {resultados.length > 0 ? (
               <ul className="border rounded max-h-40 overflow-y-auto mb-4">
                 {resultados.map((aluno) => (
                   <li
@@ -141,6 +158,16 @@ export default function CriarAvaliacao() {
                   </li>
                 ))}
               </ul>
+            ) : (
+              <div className="mb-4">
+                <p className="text-sm text-gray-600">Nenhum aluno encontrado.</p>
+                <button
+                  onClick={() => setMostrarModalCadastro(true)}
+                  className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                >
+                  + Cadastrar Novo Aluno
+                </button>
+              </div>
             )}
           </>
         )}
@@ -150,6 +177,13 @@ export default function CriarAvaliacao() {
             <p className="mb-4 text-sm text-gray-600">
               Aluno selecionado: <strong>{alunoSelecionado.nome}</strong> - CPF: <strong>{alunoSelecionado.cpf}</strong>
             </p>
+
+            <button
+              onClick={() => setAlunoSelecionado(null)}
+              className="mb-4 text-sm text-red-600 hover:underline"
+            >
+              Cancelar seleção de aluno
+            </button>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -222,6 +256,16 @@ export default function CriarAvaliacao() {
               </div>
             </form>
           </>
+        )}
+
+        {mostrarModalCadastro && (
+          <ModalCadastroRapidoAluno
+            onClose={() => setMostrarModalCadastro(false)}
+            onAlunoCriado={(novoAluno) => {
+              setMostrarModalCadastro(false);
+              navigate("/avaliacoes/nova", { state: { alunoSelecionado: novoAluno } });
+            }}
+          />
         )}
       </div>
     </Layout>

@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
+import ModalConfirmarExclusao from "../../components/ModalConfirmarExclusao";
 
 export default function AvaliacoesScreen() {
   const [avaliacoes, setAvaliacoes] = useState([]);
   const [tipoUsuario, setTipoUsuario] = useState("");
+  const [avaliacaoSelecionada, setAvaliacaoSelecionada] = useState(null);
+  const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,14 +28,18 @@ export default function AvaliacoesScreen() {
     fetchAvaliacoes();
   }, []);
 
-  const excluirAvaliacao = async (id_avaliacao) => {
-    if (!window.confirm("Deseja realmente excluir esta avaliação?")) return;
+  const abrirModalExcluir = (avaliacao) => {
+    setAvaliacaoSelecionada(avaliacao);
+    setMostrarModalExcluir(true);
+  };
 
+  const confirmarExclusao = async () => {
     try {
-      await api.delete(`/avaliacoes/${id_avaliacao}`);
+      await api.delete(`/avaliacoes/${avaliacaoSelecionada.id_avaliacao}`);
       setAvaliacoes((prev) =>
-        prev.filter((a) => a.id_avaliacao !== id_avaliacao)
+        prev.filter((a) => a.id_avaliacao !== avaliacaoSelecionada.id_avaliacao)
       );
+      setMostrarModalExcluir(false);
     } catch (err) {
       console.error("Erro ao excluir avaliação:", err);
       alert("Erro ao excluir.");
@@ -84,7 +91,8 @@ export default function AvaliacoesScreen() {
                   </p>
                 </div>
 
-                <div className="flex gap-2 mt-4 sm:mt-0">
+                <div className="flex flex-wrap gap-2 mt-4 sm:mt-0">
+                  {/* Botão de detalhes */}
                   <button
                     onClick={() =>
                       navigate(`/avaliacoes/${avaliacao.id_avaliacao}`)
@@ -104,9 +112,8 @@ export default function AvaliacoesScreen() {
                       >
                         Editar
                       </button>
-
                       <button
-                        onClick={() => excluirAvaliacao(avaliacao.id_avaliacao)}
+                        onClick={() => abrirModalExcluir(avaliacao)}
                         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
                       >
                         Excluir
@@ -119,6 +126,15 @@ export default function AvaliacoesScreen() {
           </div>
         )}
       </div>
+
+      {mostrarModalExcluir && avaliacaoSelecionada && (
+        <ModalConfirmarExclusao
+          titulo="Excluir Avaliação"
+          mensagem={`Tem certeza que deseja excluir a avaliação de ${avaliacaoSelecionada.nome_aluno}? Essa ação não poderá ser desfeita.`}
+          onClose={() => setMostrarModalExcluir(false)}
+          onConfirm={confirmarExclusao}
+        />
+      )}
     </Layout>
   );
 }

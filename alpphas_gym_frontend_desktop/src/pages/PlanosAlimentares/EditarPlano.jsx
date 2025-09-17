@@ -7,6 +7,7 @@ export default function EditarPlano() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [plano, setPlano] = useState(null);
+  const [mensagem, setMensagem] = useState(""); // ✅ feedback visual
 
   useEffect(() => {
     async function carregarPlano() {
@@ -15,7 +16,7 @@ export default function EditarPlano() {
         setPlano(res.data);
       } catch (err) {
         console.error("Erro ao carregar plano:", err);
-        alert("Erro ao carregar plano alimentar.");
+        setMensagem("Erro ao carregar plano alimentar.");
       }
     }
     carregarPlano();
@@ -62,7 +63,6 @@ export default function EditarPlano() {
   };
 
   const salvarAlteracoes = async () => {
-    // ⚠️ Filtra refeições sem alimentos válidos
     const refeicoesValidas = plano.refeicoes
       .filter(ref => ref.titulo.trim() && ref.alimentos.length > 0)
       .map(ref => ({
@@ -72,17 +72,17 @@ export default function EditarPlano() {
       .filter(ref => ref.alimentos.length > 0);
 
     if (refeicoesValidas.length === 0) {
-      alert("Informe ao menos uma refeição com alimentos válidos.");
+      setMensagem("Informe ao menos uma refeição com alimentos válidos.");
       return;
     }
 
     try {
       await api.put(`/planos/${id}`, { refeicoes: refeicoesValidas });
-      alert("Plano atualizado com sucesso!");
-      navigate("/planos");
+      setMensagem("Plano atualizado com sucesso!");
+      setTimeout(() => navigate("/planos"), 1500); // ✅ redireciona após salvar
     } catch (err) {
       console.error("Erro ao atualizar plano:", err);
-      alert("Erro ao atualizar plano.");
+      setMensagem("Erro ao atualizar plano.");
     }
   };
 
@@ -98,6 +98,12 @@ export default function EditarPlano() {
     <Layout>
       <div className="p-6 max-w-4xl mx-auto bg-white shadow rounded">
         <h1 className="text-2xl font-bold mb-4">Editar Plano Alimentar</h1>
+
+        {mensagem && (
+          <div className="mb-4 p-3 rounded text-white bg-blue-600">
+            {mensagem}
+          </div>
+        )}
 
         <div className="space-y-6">
           {plano.refeicoes.map((ref, refIndex) => (

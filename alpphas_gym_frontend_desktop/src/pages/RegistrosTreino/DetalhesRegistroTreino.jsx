@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../axios";
+import ModalConfirmarExclusao from "../../components/ModalConfirmarExclusao";
 
 export default function DetalhesRegistroTreino() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [registro, setRegistro] = useState(null);
   const [tipoUsuario, setTipoUsuario] = useState("");
+  const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
 
   useEffect(() => {
     async function carregarRegistro() {
@@ -18,8 +20,9 @@ export default function DetalhesRegistroTreino() {
         setRegistro(res.data);
       } catch (err) {
         console.error("Erro ao carregar registro:", err);
-        alert("Erro ao carregar registro.");
-        navigate("/registrostreino");
+        navigate("/registrostreino", {
+          state: { mensagem: "Erro ao carregar registro." },
+        });
       }
     }
 
@@ -30,17 +33,17 @@ export default function DetalhesRegistroTreino() {
     navigate(`/registrostreino/${id}/editar`);
   };
 
-  const handleExcluir = async () => {
-    const confirmar = window.confirm("Tem certeza que deseja excluir este registro?");
-    if (!confirmar) return;
-
+  const confirmarExclusao = async () => {
     try {
       await api.delete(`/registrostreino/${id}`);
-      alert("Registro excluído com sucesso.");
-      navigate("/registrostreino");
+      navigate("/registrostreino", {
+        state: { mensagem: "Registro excluído com sucesso." },
+      });
     } catch (err) {
       console.error("Erro ao excluir registro:", err);
-      alert("Erro ao excluir registro.");
+      navigate("/registrostreino", {
+        state: { mensagem: "Erro ao excluir registro." },
+      });
     }
   };
 
@@ -59,7 +62,7 @@ export default function DetalhesRegistroTreino() {
               Editar
             </button>
             <button
-              onClick={handleExcluir}
+              onClick={() => setMostrarModalExcluir(true)}
               className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
             >
               Excluir
@@ -70,6 +73,9 @@ export default function DetalhesRegistroTreino() {
 
       <div className="bg-white p-4 rounded shadow mb-6">
         <p><strong>Aluno:</strong> {registro.nome_aluno}</p>
+        {registro.nome_plano && (
+          <p><strong>Plano de Treino:</strong> {registro.nome_plano}</p>
+        )}
         <p><strong>Treino:</strong> {registro.nome_treino}</p>
         <p><strong>Data:</strong> {new Date(registro.data_execucao).toLocaleString()}</p>
         {registro.nome_profissional && (
@@ -90,6 +96,15 @@ export default function DetalhesRegistroTreino() {
           </div>
         ))}
       </div>
+
+      {mostrarModalExcluir && (
+        <ModalConfirmarExclusao
+          titulo="Excluir Registro de Treino"
+          mensagem={`Tem certeza que deseja excluir o registro de treino "${registro.nome_treino}" do aluno ${registro.nome_aluno || "?"}? Essa ação não poderá ser desfeita.`}
+          onClose={() => setMostrarModalExcluir(false)}
+          onConfirm={confirmarExclusao}
+        />
+      )}
     </div>
   );
 }

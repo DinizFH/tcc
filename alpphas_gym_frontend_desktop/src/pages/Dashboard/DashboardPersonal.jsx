@@ -14,24 +14,57 @@ import {
 export default function DashboardPersonal() {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
+  const [agendamentos, setAgendamentos] = useState([]);
 
   useEffect(() => {
-    async function fetchPerfil() {
+    async function fetchDados() {
       try {
-        const res = await api.get("/usuarios/perfil");
-        setNome(res.data.nome);
+        const perfil = await api.get("/usuarios/perfil");
+        setNome(perfil.data.nome);
+
+        const res = await api.get("/dashboard");
+        const ags = res.data.proximos_atendimentos || [];
+
+        const agsFiltrados = ags
+          .filter((a) => a.data_hora_inicio)
+          .sort((a, b) => new Date(a.data_hora_inicio) - new Date(b.data_hora_inicio));
+
+        setAgendamentos(agsFiltrados);
       } catch (err) {
-        console.error("Erro ao buscar perfil:", err);
+        console.error("Erro ao buscar dados:", err);
       }
     }
-    fetchPerfil();
+    fetchDados();
   }, []);
+
+  function formatarDataHora(dataStr) {
+    const dt = new Date(dataStr);
+    return dt.toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   const cards = [
     {
       title: "Agendamentos",
       icon: <FaCalendarAlt className="text-4xl text-blue-600" />,
       action: () => navigate("/agendamentos"),
+      resumo: agendamentos.length > 0 ? (
+        <>
+          <p className="text-sm text-gray-600 mt-2">
+            {agendamentos.length} ativo(s)
+          </p>
+          <p className="text-xs text-gray-500">
+            {formatarDataHora(agendamentos[0].data_hora_inicio)} - {agendamentos[0].tipo_agendamento}
+          </p>
+        </>
+      ) : (
+        <p className="text-sm text-gray-500 mt-2">Sem agendamentos futuros</p>
+      ),
     },
     {
       title: "Treinos",
@@ -73,7 +106,8 @@ export default function DashboardPersonal() {
               className="cursor-pointer bg-white rounded-2xl shadow-md p-6 flex flex-col items-center hover:shadow-xl transition"
             >
               {card.icon}
-              <h2 className="mt-4 text-xl font-semibold">{card.title}</h2>
+              <h2 className="mt-4 text-xl font-semibold text-center">{card.title}</h2>
+              {card.resumo}
             </div>
           ))}
         </div>

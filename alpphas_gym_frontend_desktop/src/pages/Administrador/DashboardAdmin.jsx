@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../axios";
 import Layout from "../../components/Layout";
 import {
@@ -74,6 +74,20 @@ export default function DashboardAdmin() {
               </div>
             </div>
           ))}
+
+          {/* Card adicional: Logs do Sistema */}
+          <Link
+            to="/admin/logs"
+            className="bg-white shadow-md p-5 rounded-2xl flex items-center justify-between hover:shadow-lg transition"
+          >
+            <div className="text-4xl text-blue-600">
+              <FaClipboardList />
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-500">Logs do Sistema</div>
+              <div className="text-md font-semibold text-blue-700 underline">Ver logs</div>
+            </div>
+          </Link>
         </div>
       </div>
     </Layout>

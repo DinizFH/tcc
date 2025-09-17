@@ -39,12 +39,12 @@ export default function DashboardAluno() {
     {
       title: "Treinos",
       icon: <FaDumbbell className="text-4xl text-blue-600" />,
-      action: () => navigate("/treinos-aluno"),
+      action: () => navigate("/treinos"), // 🔥 Corrigido
     },
     {
       title: "Nutrição",
       icon: <FaAppleAlt className="text-4xl text-green-600" />,
-      action: () => navigate("/planos"), // ✅ Caminho corrigido
+      action: () => navigate("/planos"),
     },
     {
       title: "Progresso",

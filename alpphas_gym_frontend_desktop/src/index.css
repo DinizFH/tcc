@@ -6,3 +6,43 @@ body {
   @apply font-sans;
   font-family: 'Poppins', sans-serif;
 }
+
+/* ===============================
+   ESTILOS DE IMPRESSÃO PERSONALIZADOS
+   =============================== */
+@media print {
+  /* Esconde tudo fora da área de impressão */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Exibe somente a área de impressão */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Faz a área ocupar toda a página */
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  /* Esconde botões, menus, sidebar e qualquer coisa com "no-print" */
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+
+  /* Configuração da página para PDF ou papel */
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
