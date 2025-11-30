@@ -1,5 +1,5 @@
 export default function ModalSelecionarTreino({ plano, onClose, onSelecionar }) {
-  // 🔹 Garante que treinos seja sempre array
+  //  Garante que treinos seja sempre array
   const treinos = Array.isArray(plano?.treinos) ? plano.treinos : [];
 
   return (
@@ -21,7 +21,7 @@ export default function ModalSelecionarTreino({ plano, onClose, onSelecionar }) 
                   onSelecionar({
                     id_treino: treino.id_treino,
                     nome_treino: treino.nome_treino,
-                    id_plano: plano?.id_plano || null, // 🔹 agora também passa o id do plano
+                    id_plano: plano?.id_plano || null, // Passa o id do plano
                     nome_plano: plano?.nome_plano || "",
                   })
                 }

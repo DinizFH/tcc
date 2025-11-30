@@ -1,5 +1,3 @@
-// src/pages/Administrador/LogsAdmin.jsx
-
 import { useEffect, useState } from "react";
 import api from "../../axios";
 import Layout from "../../components/Layout";

@@ -19,7 +19,7 @@ export default function CriarPlano() {
   const [alunoSelecionado, setAlunoSelecionado] = useState(null);
   const [showCadastroRapido, setShowCadastroRapido] = useState(false);
 
-  const [mensagem, setMensagem] = useState(""); // ✅ mensagem de feedback
+  const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
     if (buscaAluno.length >= 2) {
@@ -97,7 +97,7 @@ export default function CriarPlano() {
 
       await api.post("/planos/", body);
 
-      // ✅ mostra mensagem e redireciona após 1,5s
+      // Mostra mensagem e redireciona após 1,5s
       setMensagem("Plano alimentar criado com sucesso!");
       setTimeout(() => navigate("/planos"), 1500);
 

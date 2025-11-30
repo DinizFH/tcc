@@ -9,13 +9,13 @@ export default function ModalSelecionarPlano({ idAluno, onClose, onSelecionar })
       try {
         if (!idAluno) return;
 
-        // 🔹 Agora sempre usamos a rota unificada
+        // Rota unificada
         const res = await api.get(`/treinos/aluno/${idAluno}/planos`);
         const dados = Array.isArray(res.data)
           ? res.data
           : res.data?.planos || [];
 
-        // 🔹 Deduplicar planos por id_plano
+        //  Deduplicar planos por id_plano
         const unicos = [];
         const vistos = new Set();
         for (const p of dados) {
@@ -47,7 +47,7 @@ export default function ModalSelecionarPlano({ idAluno, onClose, onSelecionar })
               <li
                 key={plano.id_plano}
                 className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded"
-                onClick={() => onSelecionar(plano)} // 🔹 passa plano inteiro com seus treinos
+                onClick={() => onSelecionar(plano)} // Passa plano inteiro com seus treinos
               >
                 {plano.nome_plano}
               </li>

@@ -30,7 +30,7 @@ export default function CriarRegistroTreino() {
         let listaExercicios = [];
 
         if (tipoUsuario === "aluno") {
-          // 🔹 Aluno: pega os treinos pelo plano
+          //  Aluno: pega os treinos pelo plano
           const res = await api.get(`/treinos/plano/${idPlano}/detalhes`);
           const treinos = res.data?.plano?.treinos || [];
 
@@ -42,14 +42,14 @@ export default function CriarRegistroTreino() {
             listaExercicios = treinoSelecionado.exercicios;
           }
         } else {
-          // 🔹 Personal: rota direta
+          //  Personal: rota direta
           const res = await api.get(`/treinos/${state.id_treino}`);
           listaExercicios = res.data.exercicios || [];
         }
 
         setExercicios(listaExercicios);
 
-        // 🔹 Carregar últimas cargas
+        //  Carregar últimas cargas
         const novasUltimasCargas = {};
         for (const ex of listaExercicios) {
           try {
@@ -101,7 +101,7 @@ export default function CriarRegistroTreino() {
 
       await api.post("/registrostreino/", payload);
 
-      // ✅ Em vez de alert, redireciona com mensagem
+      // Em vez de alert, redireciona com mensagem
       navigate("/registrostreino", {
         state: { mensagem: "Registro de treino salvo com sucesso!" },
       });

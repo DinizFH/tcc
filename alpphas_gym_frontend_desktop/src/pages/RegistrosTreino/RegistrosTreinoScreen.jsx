@@ -18,11 +18,11 @@ export default function RegistrosTreinoScreen() {
   const [alunoSelecionado, setAlunoSelecionado] = useState(null);
   const [planoSelecionado, setPlanoSelecionado] = useState(null);
 
-  // 🔹 Modal de exclusão
+  //  Modal de exclusão
   const [registroSelecionado, setRegistroSelecionado] = useState(null);
   const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
 
-  // 🔹 Mensagem de sucesso (após criar/editar)
+  //  Mensagem de sucesso (após criar/editar)
   const location = useLocation();
   const [mensagem, setMensagem] = useState(location.state?.mensagem || "");
 
@@ -50,7 +50,7 @@ export default function RegistrosTreinoScreen() {
 
     carregarDados();
 
-    // 🔹 Limpa mensagem do state depois de exibir
+    //  Limpa mensagem do state depois de exibir
     if (location.state?.mensagem) {
       navigate(location.pathname, { replace: true });
     }
@@ -142,7 +142,7 @@ export default function RegistrosTreinoScreen() {
         </button>
       </div>
 
-      {/* 🔹 Mensagem de sucesso */}
+      {/*  Mensagem de sucesso */}
       {mensagem && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded">
           {mensagem}

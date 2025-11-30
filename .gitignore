@@ -3,6 +3,7 @@
 #########################################
 .env
 .env.*
+.env.local
 .env.test
 
 #########################################
@@ -27,9 +28,9 @@ __pycache__/
 *.db
 *.db3
 
-# Evitar dumps grandes ou sensíveis
-*.sql
-!schema.sql   # Se quiser manter apenas o schema limpo
+# Permitir schema SQL
+!/db/schema.sql
+!/database/schema.sql
 
 #########################################
 # Logs e arquivos temporários
@@ -41,7 +42,7 @@ __pycache__/
 .cache/
 
 #########################################
-# Arquivos do sistema operacional
+# Arquivos do sistema
 #########################################
 .DS_Store
 Thumbs.db
@@ -50,107 +51,66 @@ Thumbs.db
 # Configs de IDE / Editor
 #########################################
 .vscode/
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
 
 #########################################
-# Compilação / artefatos Python
+# Compilação Python / testes
 #########################################
 build/
 dist/
 *.egg-info/
 .eggs/
-
-#########################################
-# Pytest / Cobertura de testes
-#########################################
 .pytest_cache/
 .coverage
 .coverage.*
 htmlcov/
 
 #########################################
-# Uploads locais (não versionar)
+# Uploads (não versionar)
 #########################################
 uploads/
 static/uploads/
 
 #########################################
-# Cache e temporários do Flask
+# Flask temporários
 #########################################
 instance/
 *.session
 *.bak
 
 #########################################
-# Build Desktop (Tauri, Vite, React)
+# Tauri / Frontend Desktop
 #########################################
 src-tauri/target/
 src-tauri/.cargo/
 src-tauri/tauri-build/
-alpphas_gym_frontend_desktop/
 dist/
 dist-ssr/
-node_modules/
 .vite/
 
+# Node
+node_modules/
+
 #########################################
-# Arquivos grandes / mídia local
+# Imagens grandes / vídeos (TCC precisa de imagens!)
+# NÃO ignorar PNG/JPG/SVG, apenas VÍDEO
 #########################################
 *.mp4
 *.mov
 *.avi
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.svg
-*.webp
-assets/
+
+# NÃO ignorar PNG/JPG !!!
+# NÃO ignorar /assets !!!
+# (Importante para site, mobile, TCC, logos)
 
 #########################################
-# FRONTEND DESKTOP (React + Vite + Tauri)
+# FRONTEND MOBILE (Expo)
 #########################################
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Node
-node_modules/
-dist/
-dist-ssr/
-.vite/
-*.local
-
-# Editor / Workspace
-.vscode/*
-!.vscode/extensions.json
-.idea/
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-#########################################
-# FRONTEND MOBILE (Expo + React Native)
-#########################################
-
-# Dependências
-node_modules/
-
-# Expo
 .expo/
 .expo-shared/
-dist/
 web-build/
 expo-env.d.ts
 
@@ -159,7 +119,7 @@ ios/
 android/
 *.orig.*
 
-# Certificados / chaves (NUNCA versionar)
+# Chaves e certificados
 *.jks
 *.p8
 *.p12
@@ -175,15 +135,9 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
-.DS_Store
-
-# Variáveis de ambiente
-.env*.local
-
 # Typescript
 *.tsbuildinfo
 
-# Arquivos de exemplo / dev
+# Arquivos de exemplo
 app-example/
 

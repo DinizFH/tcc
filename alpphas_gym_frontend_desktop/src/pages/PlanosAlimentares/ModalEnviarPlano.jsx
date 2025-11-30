@@ -1,4 +1,3 @@
-// src/pages/PlanosAlimentares/ModalEnviarPlano.jsx
 import { useState } from "react";
 import { FaWhatsapp, FaEnvelope, FaPaperPlane } from "react-icons/fa";
 import api from "../../axios";

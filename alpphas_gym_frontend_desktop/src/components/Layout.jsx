@@ -1,7 +1,6 @@
-// src/components/Layout.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../axios"; // Importa axios configurado
+import api from "../axios";
 import Sidebar from "./Sidebar";
 
 export default function Layout({ children }) {

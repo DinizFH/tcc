@@ -76,7 +76,7 @@ export default function CriarAgendamento({ isEditMode = false }) {
       if (isEditMode) {
         await api.put(`/agendamentos/${id}`, {
           ...payload,
-          status: "marcado", // ✅ garante persistência
+          status: "marcado",
         });
       } else {
         await api.post("/agendamentos/", payload);

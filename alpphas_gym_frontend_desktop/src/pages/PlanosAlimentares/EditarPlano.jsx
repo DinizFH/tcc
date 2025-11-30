@@ -7,7 +7,7 @@ export default function EditarPlano() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [plano, setPlano] = useState(null);
-  const [mensagem, setMensagem] = useState(""); // ✅ feedback visual
+  const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
     async function carregarPlano() {
@@ -79,7 +79,7 @@ export default function EditarPlano() {
     try {
       await api.put(`/planos/${id}`, { refeicoes: refeicoesValidas });
       setMensagem("Plano atualizado com sucesso!");
-      setTimeout(() => navigate("/planos"), 1500); // ✅ redireciona após salvar
+      setTimeout(() => navigate("/planos"), 1500);
     } catch (err) {
       console.error("Erro ao atualizar plano:", err);
       setMensagem("Erro ao atualizar plano.");

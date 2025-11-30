@@ -1,4 +1,3 @@
-// src/pages/Administrador/UsuariosAdmin.jsx
 import { useEffect, useState } from "react";
 import api from "../../axios";
 import Layout from "../../components/Layout";

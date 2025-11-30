@@ -26,7 +26,7 @@ export default function EditarTreinoIndividual() {
 
       setNomeTreino(response.data.nome_treino || "");
 
-      // 🔧 garante que exercicios sempre seja array
+      // Garante que exercicios sempre seja array
       const dadosExercicios = Array.isArray(response.data.exercicios)
         ? response.data.exercicios.map((e) => ({
             id_exercicio: e.id_exercicio,

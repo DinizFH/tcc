@@ -1,7 +1,6 @@
-// src/components/PrivateRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import api from "../axios"; // Usa axios configurado
+import api from "../axios";
 
 export default function PrivateRoute({ children }) {
   const [autenticado, setAutenticado] = useState(null);
