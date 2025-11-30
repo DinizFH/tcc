@@ -20,6 +20,10 @@ ENV/
 __pycache__/
 *.py[cod]
 *$py.class
+htmlcov/
+.pytest_cache/
+.coverage*
+
 
 #########################################
 # Banco de dados local
