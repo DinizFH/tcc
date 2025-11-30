@@ -1,0 +1,30 @@
+# ---------------------
+# Backend Flask Alpphas GYM
+# ---------------------
+
+Flask==3.0.3
+flask-jwt-extended==4.6.0
+flask-login==0.6.3
+flask-cors==4.0.1
+flask-mail==0.9.1
+
+# Banco de dados
+PyMySQL==1.1.0
+
+# Segurança e criptografia
+bcrypt==4.1.2
+cryptography==42.0.4
+
+# Utilitários
+python-dotenv==1.0.1
+requests==2.32.3
+pytz==2023.3
+
+# Relatórios PDF
+reportlab==4.1.0
+
+# Deploy (opcional para servidores)
+gunicorn==21.2.0
+
+# Gráficos (somente se realmente usado)
+matplotlib==3.8.4
