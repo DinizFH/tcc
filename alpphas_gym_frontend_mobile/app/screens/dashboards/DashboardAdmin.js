@@ -25,7 +25,7 @@ export default function DashboardAdmin({ navigation }) {
     exercicios: 0,
   });
   const [nome, setNome] = useState('');
-  const { logout } = useAuth(); // ✅ contexto global de autenticação
+  const { logout } = useAuth(); 
 
   useEffect(() => {
     async function carregarDados() {
@@ -43,7 +43,7 @@ export default function DashboardAdmin({ navigation }) {
     carregarDados();
   }, []);
 
-  // ✅ botão de logout funcional para Web + Mobile
+  //  botão de logout funcional para Web + Mobile
   async function handleLogout() {
     if (Platform.OS === 'web') {
       const confirmar = window.confirm('Deseja realmente sair do sistema?');
