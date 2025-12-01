@@ -32,7 +32,7 @@ export default function RegistrosTreinoScreen() {
   const [alunoSel, setAlunoSel] = useState(null);
   const [planoSel, setPlanoSel] = useState(null);
 
-  // ✅ Corrige comportamento do botão físico "Voltar"
+  // Corrige comportamento do botão físico "Voltar"
   useEffect(() => {
     const backAction = () => {
       navigation.reset({
