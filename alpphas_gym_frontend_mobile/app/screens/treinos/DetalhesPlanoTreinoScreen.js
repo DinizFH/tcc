@@ -1,4 +1,3 @@
-// app/screens/treinos/DetalhesPlanoTreinoScreen.js
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -14,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import logo from '../../../assets/alpphas_logo.png'; // ✅ logo local
+import logo from '../../../assets/alpphas_logo.png';
 import api from '../../services/api';
 
 export default function DetalhesPlanoTreinoScreen() {
