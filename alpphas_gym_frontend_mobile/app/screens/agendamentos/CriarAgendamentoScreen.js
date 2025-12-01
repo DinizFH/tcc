@@ -16,7 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import api from '../../services/api';
 
 export default function CriarAgendamentoScreen({ navigation, route }) {
-  const { id } = route.params || {}; // ✅ se existir, modo edição
+  const { id } = route.params || {}; 
   const [modoEdicao, setModoEdicao] = useState(!!id);
 
   const [perfil, setPerfil] = useState(null);
