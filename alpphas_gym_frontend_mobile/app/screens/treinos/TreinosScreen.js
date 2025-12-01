@@ -32,7 +32,7 @@ export default function TreinosScreen() {
         return true; // evita minimizar o app
       };
 
-      // ✅ Corrige erro em ambientes Expo (garante compatibilidade)
+      // Corrige erro em ambientes Expo (garante compatibilidade)
       if (BackHandler && BackHandler.addEventListener) {
         const subscription = BackHandler.addEventListener(
           'hardwareBackPress',
