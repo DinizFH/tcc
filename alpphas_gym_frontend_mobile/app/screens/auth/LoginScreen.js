@@ -17,7 +17,7 @@ import api from '../../services/api';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const { login } = useAuth(); // ✅ usa o contexto global
+  const { login } = useAuth(); 
 
   async function handleLogin() {
     if (!email || !senha) {
