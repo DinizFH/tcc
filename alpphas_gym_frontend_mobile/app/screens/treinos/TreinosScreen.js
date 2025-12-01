@@ -1,4 +1,3 @@
-// app/screens/treinos/TreinosScreen.js
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useState } from 'react';
 import {
