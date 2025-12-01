@@ -1,4 +1,3 @@
-// app/screens/registros/SelecionarTreinoModal.js
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RegistroTreinoService from './RegistroTreinoService';
