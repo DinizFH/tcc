@@ -74,7 +74,7 @@ export default function DashboardPersonal({ navigation }) {
       title: 'Registro de Treino',
       icon: 'clipboard-list',
       color: '#06b6d4',
-      screen: 'RegistrosTreino', // ✅ vinculado corretamente ao módulo
+      screen: 'RegistrosTreino', 
     },
   ];
 
@@ -95,7 +95,7 @@ export default function DashboardPersonal({ navigation }) {
       <TouchableOpacity
         style={styles.perfilBox}
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('PerfilScreen')} // 🔗 AGORA LEVA AO PERFIL
+        onPress={() => navigation.navigate('PerfilScreen')} //  AGORA LEVA AO PERFIL
       >
         <Image
           source={require('../../../assets/alpphas_logo.png')}
