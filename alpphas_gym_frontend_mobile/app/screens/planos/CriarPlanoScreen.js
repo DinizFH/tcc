@@ -200,7 +200,7 @@ export default function CriarPlanoScreen({ navigation }) {
                   <TextInput
                     placeholder="Quantidade / Peso (g/ml)"
                     style={[styles.input, { flex: 0.6 }]}
-                    keyboardType="default" // ✅ aceita texto e número
+                    keyboardType="default" // aceita texto e número
                     value={alimento.peso}
                     onChangeText={(v) => handleAlimentoChange(index, i, 'peso', v)}
                   />
