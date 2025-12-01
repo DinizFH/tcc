@@ -1,4 +1,3 @@
-// app/screens/registros/CriarRegistroTreinoScreen.js
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
