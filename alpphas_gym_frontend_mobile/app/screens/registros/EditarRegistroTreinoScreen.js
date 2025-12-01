@@ -1,4 +1,3 @@
-// app/screens/registros/EditarRegistroTreinoScreen.js
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
