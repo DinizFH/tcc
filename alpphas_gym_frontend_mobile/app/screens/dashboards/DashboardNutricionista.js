@@ -83,7 +83,7 @@ export default function DashboardNutricionista({ navigation }) {
       <TouchableOpacity
         style={styles.perfilBox}
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('PerfilScreen')} // 🔗 LINK DIRETO PARA PERFIL
+        onPress={() => navigation.navigate('PerfilScreen')} //  LINK DIRETO PARA PERFIL
       >
         <Image
           source={require('../../../assets/alpphas_logo.png')}
