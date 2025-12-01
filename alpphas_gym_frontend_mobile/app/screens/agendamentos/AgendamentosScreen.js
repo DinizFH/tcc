@@ -19,7 +19,7 @@ export default function AgendamentosScreen({ navigation }) {
   const [tipoUsuario, setTipoUsuario] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const isFocused = useIsFocused(); // ✅ detecta quando a tela está ativa
+  const isFocused = useIsFocused(); 
   const { userType } = useAuth();
 
   // === FUNÇÃO CENTRAL DE CARREGAMENTO ===
@@ -43,7 +43,7 @@ export default function AgendamentosScreen({ navigation }) {
   // === CARREGAR QUANDO ENTRA NA TELA ===
   useEffect(() => {
     if (isFocused) {
-      fetchDados(); // 🔁 atualiza automaticamente ao voltar da tela de criação
+      fetchDados(); //  atualiza automaticamente ao voltar da tela de criação
     }
   }, [isFocused, fetchDados]);
 
