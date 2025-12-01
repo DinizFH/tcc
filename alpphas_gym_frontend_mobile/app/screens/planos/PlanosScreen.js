@@ -19,7 +19,7 @@ export default function PlanosScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [tipoUsuario, setTipoUsuario] = useState('');
-  const isFocused = useIsFocused(); // 👈 detecta foco da tela
+  const isFocused = useIsFocused(); 
 
   const { userType } = useAuth();
 
