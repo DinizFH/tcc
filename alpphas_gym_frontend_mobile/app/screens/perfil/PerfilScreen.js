@@ -1,4 +1,3 @@
-// app/screens/perfil/PerfilScreen.js
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
