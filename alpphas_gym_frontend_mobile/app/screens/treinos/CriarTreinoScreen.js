@@ -1,4 +1,3 @@
-// app/screens/treinos/CriarTreinoScreen.js
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
@@ -125,7 +124,7 @@ export default function CriarTreinoScreen() {
     setCarregando(true);
     try {
       if (id_plano) {
-        // ✅ Corrigido: envia para o endpoint certo
+        // Corrigido: envia para o endpoint certo
         for (const treino of treinos) {
           await api.post('/treinos/adicionar-ao-plano', {
             id_plano: parseInt(id_plano),
@@ -148,7 +147,7 @@ export default function CriarTreinoScreen() {
 
       Alert.alert('Sucesso', id_plano ? 'Treino adicionado com sucesso!' : 'Plano de treino criado com sucesso!');
 
-      // ✅ Redireciona e limpa o histórico
+      //  Redireciona e limpa o histórico
       navigation.reset({
         index: 0,
         routes: [{ name: 'Treinos' }],
