@@ -1,4 +1,3 @@
-// app/screens/registros/SelecionarAlunoModal.js
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
