@@ -1,4 +1,3 @@
-// app/screens/treinos/EditarTreinoScreen.js
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
@@ -116,7 +115,7 @@ export default function EditarTreinoScreen() {
       });
 
       Alert.alert('Sucesso', 'Treino atualizado com sucesso!');
-      // ✅ Reset de navegação: volta direto para listagem de planos de treino
+      //  Reset de navegação: volta direto para listagem de planos de treino
       navigation.reset({
         index: 0,
         routes: [{ name: 'Treinos' }],
