@@ -72,7 +72,7 @@ export default function DashboardAluno({ navigation }) {
       title: 'Registro de Treino',
       icon: 'clipboard-list',
       color: '#00BFFF',
-      screen: 'RegistrosTreino', // ✅ vinculado corretamente
+      screen: 'RegistrosTreino', 
     },
   ];
 
@@ -94,7 +94,7 @@ export default function DashboardAluno({ navigation }) {
       <TouchableOpacity
         style={styles.perfilBox}
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('PerfilScreen')} // 🔗 LINK DIRETO PARA PERFIL
+        onPress={() => navigation.navigate('PerfilScreen')} //  LINK DIRETO PARA PERFIL
       >
         <Image
           source={require('../../../assets/alpphas_logo.png')}
