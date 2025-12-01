@@ -14,7 +14,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
-import logo from '../../../assets/alpphas_logo.png'; // ✅ garante o uso da logo local
+import logo from '../../../assets/alpphas_logo.png'; 
 
 export default function VerPlanoAlimentarScreen() {
   const route = useRoute();
