@@ -1,4 +1,3 @@
-// app/screens/registros/RegistroTreinoService.js
 import api from '../../services/api';
 
 const RegistroTreinoService = {
